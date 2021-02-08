@@ -1,0 +1,280 @@
+swagger: "2.0"
+info:
+  description: "CRUD API to manage a list of Books."
+  version: "1.0.0"
+  title: "Bookstore 'Libreria'"
+  contact:
+    email: "bogdan.prodan.j@gmail.com"
+host: "localhost:8080"
+basePath: "/api/v1"
+tags:
+  - name: "book"
+    description: "Everything about your Books"
+schemes:
+  - "http"
+paths:
+  /books:
+    post:
+      tags:
+        - "book"
+      summary: "Add a new book"
+      description: ""
+      operationId: "addBook"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Book object that needs to be added to the store"
+          required: true
+          schema:
+            $ref: "#/definitions/BookRequest"
+      responses:
+        "201":
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Book"
+        "400":
+          description: "Invalid input"
+        "500":
+          description: "Internal error"
+    get:
+      tags:
+        - "book"
+      summary: "Finds Books by different filters"
+      operationId: "findBooks"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "limit"
+          in: "query"
+          type: "integer"
+          required: false
+        - name: "offset"
+          in: "query"
+          type: "integer"
+          required: false
+        - name: "status"
+          in: "query"
+          description: "Status values that need to be considered for filter"
+          required: false
+          type: "string"
+          enum:
+            - "checkedIn"
+            - "checkedOut"
+        - name: "publisher"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "title"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "author"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "publish_date"
+          description: "Should be in form of Query Operator(eq,neq,lt,lte,gt,gte) + date(yyyy-dd-mm) e.g. 'publish_date=gt 2012-01-01'"
+          in: "query"
+          required: false
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Book"
+        "400":
+          description: "Invalid query value"
+        "500":
+          description: "Internal error"
+  /books/{id}:
+    get:
+      tags:
+        - "book"
+      summary: "Get book"
+      operationId: "getBook"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Book"
+        "400":
+          description: "Invalid id value"
+        "404":
+          description: "Not found"
+        "500":
+          description: "Internal error"
+    put:
+      tags:
+        - "book"
+      summary: "Update book"
+      operationId: "updateBook"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "body"
+          in: "body"
+          description: "Book object that needs to be added to the store"
+          required: true
+          schema:
+            $ref: "#/definitions/BookRequest"
+      responses:
+        "204":
+          description: "successful operation"
+        "400":
+          description: "Invalid id value"
+        "404":
+          description: "Not found"
+        "500":
+          description: "Internal error"
+    delete:
+      tags:
+        - "book"
+      summary: "Delete book"
+      operationId: "deleteBook"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "204":
+          description: "successful operation"
+        "400":
+          description: "Invalid id value"
+        "404":
+          description: "Not found"
+        "500":
+          description: "Internal error"
+  /books/{id}/in:
+    patch:
+      tags:
+        - "book"
+      summary: "Check-in book"
+      operationId: "checkInBook"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "204":
+          description: "successful operation"
+        "400":
+          description: "Invalid id value"
+        "404":
+          description: "Not found"
+        "500":
+          description: "Internal error"
+  /books/{id}/out:
+    patch:
+      tags:
+        - "book"
+      summary: "Check-out book"
+      operationId: "checkOutBook"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "204":
+          description: "successful operation"
+        "400":
+          description: "Invalid id value"
+        "404":
+          description: "Not found"
+        "500":
+          description: "Internal error"
+  /books/{id}/rate:
+    patch:
+      tags:
+        - "book"
+      summary: "Rate book"
+      operationId: "rateBook"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "body"
+          in: "body"
+          description: "Rating request for a book"
+          required: true
+          schema:
+            $ref: "#/definitions/RateRequest"
+      responses:
+        "204":
+          description: "successful operation"
+        "400":
+          description: "Invalid id value"
+        "404":
+          description: "Not found"
+        "500":
+          description: "Internal error"
+definitions:
+  RateRequest:
+    type: "object"
+    properties:
+      rating:
+        type: "integer"
+  BookRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      author:
+        type: "string"
+      publisher:
+        type: "string"
+      publish_date:
+        type: "string"
+        format: "date"
+  Book:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      author:
+        type: "string"
+      publisher:
+        type: "string"
+      publish_date:
+        type: "string"
+        format: "date"
+      rating:
+        type: "number"
+      status:
+        type: "string"

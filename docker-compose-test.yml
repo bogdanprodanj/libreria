@@ -1,0 +1,30 @@
+version: "2"
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./scripts/init_test.sql:/docker-entrypoint-initdb.d/init_test.sql
+    environment:
+      PS_POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "12345"
+      PS_POSTGRES_HOST: postgres
+      PS_POSTGRES_PORT: "5432"
+  libreria_test:
+    image: libreria_test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    volumes:
+      - .:/app
+    links:
+      - postgres
+    ports:
+      - 8080:8080
+    environment:
+      - LOG_LEVEL=debug
+      - POSTGRES_HOST=postgres
+      - POSTGRES_NAME=libreria_test
