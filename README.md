@@ -19,8 +19,30 @@ Using Go as your language, create a CRUD API to manage a list of Books, fulfilli
 6. Send the project along as a git repository.
 7. Please do not use go-swagger to generate the server side code.
 
+### Run
+
+To run in Docker:
+
+```
+make run
+```
+
+To run as a binary:
+```
+docker-compose up -d postgres 
+make build
+./bin/libreria
+```
+
 ### Tests
 
+To run unit tests:
+```
+make test-unit
+```
 
-
+To run integration tests:
+```
+make test-integration
+```
 
