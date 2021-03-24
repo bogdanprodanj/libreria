@@ -36,7 +36,7 @@ migrate-down: ## Rollback migrations
 
 test-integration: dep ## Run integration tests
 	docker-compose -f docker-compose-test.yml down
-	docker-compose -f docker-compose-test.yml up postgres
+	docker-compose -f docker-compose-test.yml up -d
 	POSTGRES_TEST_USER=postgres POSTGRES_TEST_NAME=libreria_test go test -v -tags integration -race -count=1 ./...
 	docker-compose -f docker-compose-test.yml down
 
